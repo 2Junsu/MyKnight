@@ -2,7 +2,24 @@ import React, { useEffect, useState } from "react";
 import TreasureItem from "../../components/TreasureItem";
 import Modal from "../../components/Modal";
 import { color } from "../../style/common/color";
-import { Container, ModalButton, ModalButtonWrap, ModalWrap, NavContainer, NavItem, NavItem2, NumberContainer, NumberText, NumberTextContainer, PositionText, SortedContainer, SortedItemContainer, TextBox, Title, Wrap } from "./style";
+import {
+  Container,
+  ModalButton,
+  ModalButtonWrap,
+  ModalWrap,
+  NavContainer,
+  NavItem,
+  NavItem2,
+  NumberContainer,
+  NumberText,
+  NumberTextContainer,
+  PositionText,
+  SortedContainer,
+  SortedItemContainer,
+  TextBox,
+  Title,
+  Wrap,
+} from "./style";
 
 let l = [
   { type: "타격", value: 390.7 },
@@ -264,6 +281,5 @@ const FindTreasure = () => {
     </Wrap>
   );
 };
-
 
 export default FindTreasure;

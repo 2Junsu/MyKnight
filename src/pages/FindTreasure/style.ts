@@ -18,16 +18,13 @@ export const NavContainer = styled.div`
   margin-bottom: 30px;
 `;
 export const NavItem = styled.button<{ navType: number }>`
-  all: unset;
   width: 50%;
   padding: 8px 0;
   border-bottom: 2px solid
     ${({ navType }) => (navType === 1 ? "black" : "transparent")};
   font-size: 18px;
   font-weight: ${({ navType }) => (navType === 1 ? "bold" : 400)};
-  &:hover {
-    cursor: pointer;
-  }
+  
 `;
 export const NavItem2 = styled(NavItem)`
   border-bottom: 2px solid
@@ -109,7 +106,6 @@ export const ModalButtonWrap = styled.div`
   margin-top: 20px;
 `;
 export const ModalButton = styled.button`
-  all: unset;
   padding: 8px 24px;
   background-color: ${color.main};
   border-radius: 8px;
@@ -117,7 +113,4 @@ export const ModalButton = styled.button`
   color: white;
   font-size: 20px;
   font-weight: 600;
-  &:hover {
-    cursor: pointer;
-  }
 `;
