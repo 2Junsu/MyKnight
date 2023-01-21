@@ -84,9 +84,6 @@ export const TextBox = styled.div`
     font-weight: 500;
     width: 150px;
     border: none;
-    &:focus {
-      outline: none;
-    }
   }
   & > select {
     border: 2px solid ${color.main};

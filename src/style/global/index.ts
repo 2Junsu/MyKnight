@@ -3,16 +3,24 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyle = createGlobalStyle`
 body {
    max-width:390px;
-   height:100%;
+   height:100vh;
    margin:0 auto;
+}
 
-   button {
+button {
     all:unset;
-    
+    transition:0.2s all ease-in-out;
     &:hover {
-    cursor: pointer;
-  }
-   }
+        cursor: pointer;
+        filter:brightness(80%);
+        transition:0.2s all ease-in-out;
+    }
+}
+
+input{
+    &:focus{
+        outline:none;
+    }
 }
 `;
 
