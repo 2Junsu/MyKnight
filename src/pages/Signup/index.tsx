@@ -13,6 +13,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase-config";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { setCookie } from "../../utils/cookie";
 
 interface SignupInfoProps {
   email: string;
@@ -22,7 +23,6 @@ interface SignupInfoProps {
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies(["accessToken"]);
   const [SignupInfo, setSignupInfo] = useState<SignupInfoProps>({
     email: "",
     password: "",
