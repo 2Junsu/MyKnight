@@ -12,6 +12,9 @@ import {
   SignupWrap,
   Wrap,
 } from "./style";
+import { auth } from "../../firebase-config";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { setCookie } from "../../utils/cookie";
 
 interface LoginInfoProps {
   email: string;
@@ -24,12 +27,14 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const { email, password } = loginInfo;
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
     const changed = {
       ...loginInfo,
-      [e.target.name]: e.target.value,
+      [e.currentTarget.name]: e.currentTarget.value,
     };
     setLoginInfo(changed);
   };
@@ -38,10 +43,46 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
 
+  const login = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (email === "") {
+      alert("이메일을 입력해주세요.");
+      return;
+    }
+    if (password === "") {
+      alert("비밀번호를 입력해주세요.");
+      return;
+    }
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const accessToken = await userCredential.user.getIdToken();
+      setCookie("accessToken", accessToken);
+      navigate("/");
+    } catch (error: any) {
+      console.log(error.code);
+      switch (error.code) {
+        case "auth/user-not-found":
+          alert("존재하지 않는 계정입니다.");
+          break;
+        case "auth/wrong-password":
+          alert("잘못된 비밀번호입니다.");
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
   return (
     <Wrap>
       <LoginWrap>
-        <Container>
+        <Container onSubmit={login}>
           <h2>로그인</h2>
           <InputWrap>
             <Input
@@ -60,7 +101,9 @@ const Login = () => {
             />
             <span onClick={handleShowPassword}>표시</span>
           </PasswordInputWrap>
-          <LoginButton>로그인</LoginButton>
+          <LoginButton type="submit">
+            로그인
+          </LoginButton>
         </Container>
       </LoginWrap>
       <SignupWrap>
