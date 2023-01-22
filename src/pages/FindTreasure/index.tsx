@@ -198,7 +198,7 @@ const FindTreasure = () => {
       try {
         const response = await signOut(auth);
         removeCookie("accessToken");
-        navigate("/login");
+        navigate("/");
         window.location.reload();
       } catch (error: any) {
         console.error(error.code);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../../components/common/Input";
 import {
@@ -14,7 +14,7 @@ import {
 } from "./style";
 import { auth } from "../../firebase-config";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { setCookie } from "../../utils/cookie";
+import { getCookie, setCookie } from "../../utils/cookie";
 
 interface LoginInfoProps {
   email: string;
@@ -30,6 +30,11 @@ const Login = () => {
   const { email, password } = loginInfo;
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  useEffect(() => {
+    const accessToken = getCookie("accessToken");
+    if (accessToken !== undefined) navigate("/treasure");
+  }, []);
 
   const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
     const changed = {
@@ -63,7 +68,7 @@ const Login = () => {
       );
       const accessToken = await userCredential.user.getIdToken();
       setCookie("accessToken", accessToken);
-      navigate("/");
+      navigate("/treasure");
     } catch (error: any) {
       console.log(error.code);
       switch (error.code) {
@@ -101,9 +106,7 @@ const Login = () => {
             />
             <span onClick={handleShowPassword}>표시</span>
           </PasswordInputWrap>
-          <LoginButton type="submit">
-            로그인
-          </LoginButton>
+          <LoginButton type="submit">로그인</LoginButton>
         </Container>
       </LoginWrap>
       <SignupWrap>

@@ -57,7 +57,7 @@ const Signup = () => {
       //   const refreshToken=user.user.refreshToken;
       setCookie("accessToken", accessToken);
       alert("새로운 회원이 되신 걸 환영해요!");
-      navigate("/");
+      navigate("/treasure");
     } catch (error: any) {
       console.log(error.code);
       switch (error.code) {
