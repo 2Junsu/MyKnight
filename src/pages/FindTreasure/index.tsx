@@ -4,6 +4,7 @@ import Modal from "../../components/Modal";
 import { color } from "../../style/common/color";
 import {
   Container,
+  Header,
   ModalButton,
   ModalButtonWrap,
   ModalWrap,
@@ -20,6 +21,11 @@ import {
   Title,
   Wrap,
 } from "./style";
+import { ReactComponent as Logout } from "../../assets/icon/ic-logout.svg";
+import { auth } from "../../firebase-config";
+import { signOut } from "firebase/auth";
+import { removeCookie } from "../../utils/cookie";
+import { useNavigate } from "react-router-dom";
 
 let l = [
   { type: "타격", value: 390.7 },
@@ -86,6 +92,7 @@ interface ModalInfoProps extends TreasureProps {
 }
 
 const FindTreasure = () => {
+  const navigate = useNavigate();
   const initData: TreasureProps[] =
     JSON.parse(localStorage.getItem("treasureList") || "{}") === null
       ? l
@@ -186,9 +193,27 @@ const FindTreasure = () => {
     closeModal();
   };
 
+  const logout = async () => {
+    if (window.confirm("로그아웃 하시겠습니까?")) {
+      try {
+        const response = await signOut(auth);
+        removeCookie("accessToken");
+        navigate("/login");
+        window.location.reload();
+      } catch (error: any) {
+        console.error(error.code);
+      }
+    }
+  };
+
   return (
     <Wrap>
-      <Title>보물 찾기</Title>
+      <Header>
+        <Title>보물 찾기</Title>
+        <button onClick={logout}>
+          <Logout />
+        </button>
+      </Header>
       <NavContainer>
         <NavItem
           onClick={() => {

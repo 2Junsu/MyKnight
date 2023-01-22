@@ -11,6 +11,17 @@ export const Wrap = styled.div`
   align-items: center;
   background-color: #aaaaaa;
 `;
+export const Header=styled.div`
+width:100%;
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
+&>button{
+  position:absolute;
+  right:5%;
+}
+`
 export const Title = styled.h1``;
 export const NavContainer = styled.div`
   width: 100%;
