@@ -53,6 +53,13 @@ const Signup = () => {
 
     try {
       const user = await createUserWithEmailAndPassword(auth, email, password);
+      localStorage.setItem(
+        "userInfo",
+        JSON.stringify({
+          uid: user.user.uid,
+          email: user.user.email,
+        })
+      );
       const accessToken = await user.user.getIdToken();
       //   const refreshToken=user.user.refreshToken;
       setCookie("accessToken", accessToken);
