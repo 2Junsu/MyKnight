@@ -10,7 +10,7 @@ export const Wrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #aaaaaa;
+  background-color: #eeeeee;
 `;
 export const Header = styled.div`
   width: 100%;
@@ -112,7 +112,7 @@ export const TextBox = styled.div`
     border: none;
   }
   & > select {
-    border: 2px solid ${color.main};
+    border: 2px solid ${color.blue};
     border-radius: 8px;
     padding: 8px 16px;
     font-size: 16px;
@@ -130,7 +130,7 @@ export const ModalButtonWrap = styled.div`
 `;
 export const ModalButton = styled.button`
   padding: 8px 24px;
-  background-color: ${color.main};
+  background-color: ${color.blue};
   border-radius: 8px;
   margin: 0 16px;
   color: white;

@@ -3,13 +3,16 @@ import { _Input } from "../../components/common/Input/style";
 import { color } from "../../style/common/color";
 
 export const Wrap = styled.div`
-height: 100vh;
-display: flex;
-flex-direction: column;
-justify-content: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
 `;
 export const SignupWrap = styled.div`
-  width: 100%;
+  background-color: white;
+  width: 90%;
   height: fit-content;
   box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.5);
   border-radius: 4px;
