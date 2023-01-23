@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { TreasureProps } from ".";
 import { color } from "../../style/common/color";
 
 export const Wrap = styled.div`
@@ -11,22 +12,22 @@ export const Wrap = styled.div`
   align-items: center;
   background-color: #aaaaaa;
 `;
-export const Header=styled.div`
-width:100%;
-position:relative;
-display:flex;
-align-items:center;
-justify-content:center;
-&>button{
-  position:absolute;
-  right:5%;
-}
-`
+export const Header = styled.div`
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  & > button {
+    position: absolute;
+    right: 5%;
+  }
+`;
 export const Title = styled.h1``;
 export const NavContainer = styled.div`
+  margin-top: 20px;
   width: 100%;
   display: flex;
-  margin-bottom: 30px;
 `;
 export const NavItem = styled.button<{ navType: number }>`
   width: 50%;
@@ -35,14 +36,26 @@ export const NavItem = styled.button<{ navType: number }>`
     ${({ navType }) => (navType === 1 ? "black" : "transparent")};
   font-size: 18px;
   font-weight: ${({ navType }) => (navType === 1 ? "bold" : 400)};
-  
 `;
 export const NavItem2 = styled(NavItem)`
   border-bottom: 2px solid
     ${(props) => (props.navType === 2 ? "black" : "transparent")};
   font-weight: ${(props) => (props.navType === 2 ? "bold" : 400)};
 `;
-export const Container = styled.div`
+export const Container = styled.div<{ treasureList: TreasureProps[] | null }>`
+  margin-top: 30px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+export const LoadingWrap = styled.div`
+  height: 616px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+export const TreasureListWrap = styled.div`
   width: 90%;
   display: grid;
   place-items: center;
@@ -50,10 +63,12 @@ export const Container = styled.div`
   gap: 4px;
 `;
 export const SortedContainer = styled.div`
+  margin-top: 60px;
   width: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 `;
 export const PositionText = styled.span`
   font-size: 18px;

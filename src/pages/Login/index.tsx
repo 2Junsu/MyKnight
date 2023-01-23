@@ -66,6 +66,14 @@ const Login = () => {
         email,
         password
       );
+
+      localStorage.setItem(
+        "userInfo",
+        JSON.stringify({
+          uid: userCredential.user.uid,
+          email: userCredential.user.email,
+        })
+      );
       const accessToken = await userCredential.user.getIdToken();
       setCookie("accessToken", accessToken);
       navigate("/treasure");

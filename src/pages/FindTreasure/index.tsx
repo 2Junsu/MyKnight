@@ -5,6 +5,7 @@ import { color } from "../../style/common/color";
 import {
   Container,
   Header,
+  LoadingWrap,
   ModalButton,
   ModalButtonWrap,
   ModalWrap,
@@ -19,66 +20,16 @@ import {
   SortedItemContainer,
   TextBox,
   Title,
+  TreasureListWrap,
   Wrap,
 } from "./style";
 import { ReactComponent as Logout } from "../../assets/icon/ic-logout.svg";
-import { auth } from "../../firebase-config";
+import { auth, db } from "../../firebase-config";
 import { signOut } from "firebase/auth";
 import { removeCookie } from "../../utils/cookie";
 import { useNavigate } from "react-router-dom";
-
-let l = [
-  { type: "타격", value: 390.7 },
-  { type: "타격", value: 393.1 },
-  { type: "타격", value: 489.2 },
-  { type: "타격", value: 389 },
-  { type: "최종", value: 392.2 },
-  { type: "최종", value: 456.5 },
-  { type: "타격", value: 399.5 },
-  { type: "타격", value: 483.2 },
-  { type: "최종", value: 487.1 },
-  { type: "최종", value: 456.7 },
-  { type: "타격", value: 383 },
-  { type: "타격", value: 400.8 },
-  { type: "타격", value: 391.6 },
-  { type: "타격", value: 392.8 },
-  { type: "최종", value: 397.2 },
-  { type: "타격", value: 400.1 },
-  { type: "최종", value: 493.5 },
-  { type: "최종", value: 476.9 },
-  { type: "최종", value: 393.3 },
-  { type: "타격", value: 400.9 },
-  { type: "타격", value: 400.1 },
-  { type: "최종", value: 476.3 },
-  { type: "최종", value: 392.1 },
-  { type: "타격", value: 462.5 },
-  { type: "치명타", value: 473.2 },
-  { type: "타격", value: 384.2 },
-  { type: "타격", value: 385.1 },
-  { type: "최종", value: 393.2 },
-  { type: "타격", value: 389.5 },
-  { type: "치명타", value: 487.9 },
-  { type: "최종", value: 385.2 },
-  { type: "최종", value: 384.2 },
-  { type: "타격", value: 384.4 },
-  { type: "타격", value: 381.1 },
-  { type: "치명타", value: 494.2 },
-  { type: "타격", value: 387.8 },
-  { type: "최종", value: 385.2 },
-  { type: "최종", value: 478 },
-  { type: "최종", value: 497.4 },
-  { type: "최종", value: 378.3 },
-  { type: "최종", value: 377.4 },
-  { type: "최종", value: 392.3 },
-  { type: "최종", value: 465 },
-  { type: "타격", value: 380.2 },
-  { type: "최종", value: 380.1 },
-  { type: "타격", value: 465.6 },
-  { type: "타격", value: 481.8 },
-  { type: "최종", value: 468.2 },
-  { type: "최종", value: 464.1 },
-  { type: "타격", value: 491.6 },
-];
+import { collection, getDocs, query, where } from "firebase/firestore";
+import Loading from "../../components/common/Loading.tsx";
 
 export interface TreasureProps {
   type: string;
@@ -93,11 +44,9 @@ interface ModalInfoProps extends TreasureProps {
 
 const FindTreasure = () => {
   const navigate = useNavigate();
-  const initData: TreasureProps[] =
-    JSON.parse(localStorage.getItem("treasureList") || "{}") === null
-      ? l
-      : JSON.parse(localStorage.getItem("treasureList") || "{}");
-  const [treasureList, setTreasureList] = useState<TreasureProps[]>(initData);
+  const [treasureList, setTreasureList] = useState<TreasureProps[] | null>(
+    null
+  );
   const [sortedList, setSortedList] = useState<TreasureProps[]>([]);
   const [navType, setNavType] = useState<number>(1);
   const [modalOpened, setModalOpened] = useState<boolean>(false);
@@ -113,44 +62,69 @@ const FindTreasure = () => {
   });
 
   useEffect(() => {
-    let list = [...treasureList];
-    list.forEach((d, i) => {
-      let column = Math.ceil((i + 1) / 5);
-      let row = (i + 1) % 5;
-      if (row === 0) row = 5;
-      d.column = column;
-      d.row = row;
-    });
+    const getTreasureList = async () => {
+      try {
+        const q = query(
+          collection(db, "users"),
+          where(
+            "uid",
+            "==",
+            JSON.parse(localStorage.getItem("userInfo") || "{}").uid
+          )
+        );
+        const docRef = await getDocs(q);
+        docRef.forEach((doc) => {
+          setTreasureList(doc.data().treasureList);
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getTreasureList();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("treasureList", JSON.stringify(treasureList));
-    let list = [...treasureList];
-    let final = 0,
-      hit = 0,
-      critical = 0;
-    list.forEach((d) => {
-      switch (d.type) {
-        case "최종":
-          final++;
-          break;
-        case "타격":
-          hit++;
-          break;
-        case "치명타":
-          critical++;
-          break;
-        default:
-          break;
-      }
-    });
-    setNumber({ final, hit, critical });
+  // 몇번째 줄 몇 인지 계산해서 객체 속성 추가
+  // useEffect(() => {
+  //   let list = [...treasureList];
+  //   list.forEach((d, i) => {
+  //     let column = Math.ceil((i + 1) / 5);
+  //     let row = (i + 1) % 5;
+  //     if (row === 0) row = 5;
+  //     d.column = column;
+  //     d.row = row;
+  //   });
+  // }, []);
 
-    list.sort(function (a, b) {
-      return a.value - b.value;
-    });
-    list = list.slice(0, 5);
-    setSortedList(list);
+  useEffect(() => {
+    if (treasureList !== null) {
+      localStorage.setItem("treasureList", JSON.stringify(treasureList));
+      let list = [...treasureList];
+      let final = 0,
+        hit = 0,
+        critical = 0;
+      list.forEach((d) => {
+        switch (d.type) {
+          case "최종":
+            final++;
+            break;
+          case "타격":
+            hit++;
+            break;
+          case "치명타":
+            critical++;
+            break;
+          default:
+            break;
+        }
+      });
+      setNumber({ final, hit, critical });
+
+      list.sort(function (a, b) {
+        return a.value - b.value;
+      });
+      list = list.slice(0, 5);
+      setSortedList(list);
+    }
   }, [treasureList]);
 
   const setBorder = (value: number): string => {
@@ -185,12 +159,14 @@ const FindTreasure = () => {
   };
 
   const submit = (): void => {
-    const { type, value, id } = modalInfo;
-    let list = [...treasureList];
-    list[id].type = type;
-    list[id].value = value;
-    setTreasureList(list);
-    closeModal();
+    if (treasureList !== null) {
+      const { type, value, id } = modalInfo;
+      let list = [...treasureList];
+      list[id].type = type;
+      list[id].value = value;
+      setTreasureList(list);
+      closeModal();
+    }
   };
 
   const logout = async () => {
@@ -198,6 +174,7 @@ const FindTreasure = () => {
       try {
         const response = await signOut(auth);
         removeCookie("accessToken");
+        localStorage.removeItem("uid");
         navigate("/");
         window.location.reload();
       } catch (error: any) {
@@ -233,18 +210,26 @@ const FindTreasure = () => {
         </NavItem2>
       </NavContainer>
       {navType === 1 ? (
-        <Container>
-          {treasureList.map((d, i) => (
-            <TreasureItem
-              key={`list-item ${i + 1}`}
-              type={d.type}
-              value={d.value}
-              border={setBorder(d.value)}
-              onClick={() => {
-                openModal(d.type, d.value, i);
-              }}
-            />
-          ))}
+        <Container treasureList={treasureList}>
+          {treasureList === null ? (
+            <LoadingWrap>
+              <Loading />
+            </LoadingWrap>
+          ) : (
+            <TreasureListWrap>
+              {treasureList.map((d, i) => (
+                <TreasureItem
+                  key={`list-item ${i + 1}`}
+                  type={d.type}
+                  value={d.value}
+                  border={setBorder(d.value)}
+                  onClick={() => {
+                    openModal(d.type, d.value, i);
+                  }}
+                />
+              ))}
+            </TreasureListWrap>
+          )}
         </Container>
       ) : (
         <SortedContainer>
