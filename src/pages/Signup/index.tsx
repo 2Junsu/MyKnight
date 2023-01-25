@@ -10,15 +10,18 @@ import {
   Wrap,
 } from "./style";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase-config";
+import { auth, db } from "../../firebase-config";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { setCookie } from "../../utils/cookie";
+import { doc, setDoc } from "firebase/firestore";
+import { TreasureProps } from "../FindTreasure";
 
 interface SignupInfoProps {
   email: string;
   password: string;
   passwordCheck: string;
+  nickname: string;
 }
 
 const Signup = () => {
@@ -27,8 +30,9 @@ const Signup = () => {
     email: "",
     password: "",
     passwordCheck: "",
+    nickname: "",
   });
-  const { email, password, passwordCheck } = SignupInfo;
+  const { email, password, passwordCheck, nickname } = SignupInfo;
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const emailRegExp = (str: string) => {
@@ -37,7 +41,9 @@ const Signup = () => {
     return regExp.test(str) ? true : false;
   };
 
-  const signup = async () => {
+  const signup = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     if (!emailRegExp(email)) {
       alert("이메일을 정확히 입력해주세요.");
       return;
@@ -51,6 +57,11 @@ const Signup = () => {
       return;
     }
 
+    if (nickname === "") {
+      alert("닉네임을 입력해주세요.");
+      return;
+    }
+
     try {
       const user = await createUserWithEmailAndPassword(auth, email, password);
       localStorage.setItem(
@@ -60,6 +71,29 @@ const Signup = () => {
           email: user.user.email,
         })
       );
+
+      let list = [];
+      for (let i = 0; i < 50; i++) {
+        let column = Math.ceil((i + 1) / 5);
+        let row = (i + 1) % 5;
+        if (row === 0) row = 5;
+        const dummy: TreasureProps = {
+          type: "",
+          value: 9999,
+          column,
+          row,
+        };
+        list.push(dummy);
+      }
+
+      const userDB = {
+        uid: user.user.uid,
+        email: user.user.email,
+        nickname,
+        treasureList: list,
+      };
+      await setDoc(doc(db, "users", nickname), userDB);
+
       const accessToken = await user.user.getIdToken();
       //   const refreshToken=user.user.refreshToken;
       setCookie("accessToken", accessToken);
@@ -95,7 +129,7 @@ const Signup = () => {
   return (
     <Wrap>
       <SignupWrap>
-        <Container>
+        <Container onSubmit={signup} method="post">
           <h2>회원가입</h2>
           <InputWrap>
             <Input
@@ -122,7 +156,14 @@ const Signup = () => {
               type="password"
             />
           </InputWrap>
-          <SignupButton onClick={signup}>회원가입</SignupButton>
+          <InputWrap>
+            <Input
+              placeholder="닉네임"
+              onChange={handleInput}
+              name="nickname"
+            />
+          </InputWrap>
+          <SignupButton type="submit">회원가입</SignupButton>
         </Container>
       </SignupWrap>
     </Wrap>

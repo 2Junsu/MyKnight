@@ -5,13 +5,26 @@ import { Container, Type, Value } from "./style";
 
 export interface TreasureItemProps extends TreasureProps {
   border: string;
+  idx?: number;
   onClick?: () => void;
 }
-const TreasureItem = ({ type, value, border, onClick }: TreasureItemProps) => {
+const TreasureItem = ({
+  type,
+  value,
+  border,
+  idx,
+  onClick,
+}: TreasureItemProps) => {
   return (
     <Container border={border} onClick={onClick}>
-      <Type>{type}</Type>
-      <Value>{value}</Value>
+      {type === "" ? (
+        <Value>Lv.&nbsp;{Number(idx) * 20}</Value>
+      ) : (
+        <>
+          <Type>{type}</Type>
+          <Value>{value}</Value>
+        </>
+      )}
     </Container>
   );
 };

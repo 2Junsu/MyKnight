@@ -17,7 +17,7 @@ export const SignupWrap = styled.div`
   box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.5);
   border-radius: 4px;
 `;
-export const Container = styled.div`
+export const Container = styled.form`
   padding: 20px;
 `;
 export const InputWrap = styled.div`

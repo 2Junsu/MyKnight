@@ -28,7 +28,15 @@ import { auth, db } from "../../firebase-config";
 import { signOut } from "firebase/auth";
 import { removeCookie } from "../../utils/cookie";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import Loading from "../../components/common/Loading.tsx";
 
 export interface TreasureProps {
@@ -43,6 +51,7 @@ interface ModalInfoProps extends TreasureProps {
 }
 
 const FindTreasure = () => {
+  const uid = JSON.parse(localStorage.getItem("userInfo") || "{}").uid;
   const navigate = useNavigate();
   const [treasureList, setTreasureList] = useState<TreasureProps[] | null>(
     null
@@ -64,14 +73,7 @@ const FindTreasure = () => {
   useEffect(() => {
     const getTreasureList = async () => {
       try {
-        const q = query(
-          collection(db, "users"),
-          where(
-            "uid",
-            "==",
-            JSON.parse(localStorage.getItem("userInfo") || "{}").uid
-          )
-        );
+        const q = query(collection(db, "users"), where("uid", "==", uid));
         const docRef = await getDocs(q);
         docRef.forEach((doc) => {
           setTreasureList(doc.data().treasureList);
@@ -83,47 +85,39 @@ const FindTreasure = () => {
     getTreasureList();
   }, []);
 
-  // 몇번째 줄 몇 인지 계산해서 객체 속성 추가
-  // useEffect(() => {
-  //   let list = [...treasureList];
-  //   list.forEach((d, i) => {
-  //     let column = Math.ceil((i + 1) / 5);
-  //     let row = (i + 1) % 5;
-  //     if (row === 0) row = 5;
-  //     d.column = column;
-  //     d.row = row;
-  //   });
-  // }, []);
+  const setSortAndNum = (list: TreasureProps[]) => {
+    let final = 0,
+      hit = 0,
+      critical = 0;
+    list.forEach((d) => {
+      switch (d.type) {
+        case "최종":
+          final++;
+          break;
+        case "타격":
+          hit++;
+          break;
+        case "치명타":
+          critical++;
+          break;
+        default:
+          break;
+      }
+    });
+    setNumber({ final, hit, critical });
+
+    list.sort(function (a, b) {
+      return a.value - b.value;
+    });
+
+    list = list.filter((d) => d.value !== 9999).slice(0, 5);
+    setSortedList(list);
+  };
 
   useEffect(() => {
     if (treasureList !== null) {
-      localStorage.setItem("treasureList", JSON.stringify(treasureList));
       let list = [...treasureList];
-      let final = 0,
-        hit = 0,
-        critical = 0;
-      list.forEach((d) => {
-        switch (d.type) {
-          case "최종":
-            final++;
-            break;
-          case "타격":
-            hit++;
-            break;
-          case "치명타":
-            critical++;
-            break;
-          default:
-            break;
-        }
-      });
-      setNumber({ final, hit, critical });
-
-      list.sort(function (a, b) {
-        return a.value - b.value;
-      });
-      list = list.slice(0, 5);
-      setSortedList(list);
+      setSortAndNum(list);
     }
   }, [treasureList]);
 
@@ -158,13 +152,27 @@ const FindTreasure = () => {
     setModalInfo(changed);
   };
 
-  const submit = (): void => {
+  const submit = async () => {
+    const { type, value, id } = modalInfo;
+    if (type === "") {
+      alert("보물 종류를 선택해주세요.");
+      return;
+    }
+
     if (treasureList !== null) {
-      const { type, value, id } = modalInfo;
       let list = [...treasureList];
       list[id].type = type;
       list[id].value = value;
-      setTreasureList(list);
+      const q = query(collection(db, "users"), where("uid", "==", uid));
+      const querySnapshot = await getDocs(q);
+      let nickname: string = "";
+      querySnapshot.forEach((doc) => {
+        nickname = doc.data().nickname;
+      });
+
+      if (nickname)
+        updateDoc(doc(db, "users", nickname), { treasureList: list });
+      setSortAndNum(list);
       closeModal();
     }
   };
@@ -174,7 +182,7 @@ const FindTreasure = () => {
       try {
         const response = await signOut(auth);
         removeCookie("accessToken");
-        localStorage.removeItem("uid");
+        localStorage.removeItem("userInfo");
         navigate("/");
         window.location.reload();
       } catch (error: any) {
@@ -223,8 +231,11 @@ const FindTreasure = () => {
                   type={d.type}
                   value={d.value}
                   border={setBorder(d.value)}
+                  idx={i + 1}
                   onClick={() => {
-                    openModal(d.type, d.value, i);
+                    if (i > 0 && treasureList[i - 1].value === 9999) {
+                      alert("이전 보물부터 등록해주세요!");
+                    } else openModal(d.type, d.value, i);
                   }}
                 />
               ))}
@@ -266,9 +277,12 @@ const FindTreasure = () => {
             <span>보물 종류 : </span>
             <select
               name="type"
-              defaultValue={modalInfo?.type}
+              defaultValue={modalInfo?.type ? modalInfo?.type : "default"}
               onChange={handleModalInfo}
             >
+              <option value="default" disabled>
+                선택하세요.
+              </option>
               <option value="최종">최종</option>
               <option value="타격">타격</option>
               <option value="치명타">치명타</option>
@@ -278,7 +292,7 @@ const FindTreasure = () => {
             <span>수치 : </span>
             <input
               name="value"
-              value={modalInfo?.value}
+              value={modalInfo?.value === 9999 ? 0 : modalInfo?.value}
               onChange={handleModalInfo}
             />
           </TextBox>

@@ -95,7 +95,7 @@ const Login = () => {
   return (
     <Wrap>
       <LoginWrap>
-        <Container onSubmit={login}>
+        <Container onSubmit={login} method="post">
           <h2>로그인</h2>
           <InputWrap>
             <Input
