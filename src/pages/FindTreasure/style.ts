@@ -24,6 +24,10 @@ export const Header = styled.div`
   }
 `;
 export const Title = styled.h1``;
+export const VerText=styled.span`
+font-size:20px;
+margin-left:8px;
+`
 export const NavContainer = styled.div`
   margin-top: 20px;
   width: 100%;
@@ -43,7 +47,7 @@ export const NavItem2 = styled(NavItem)`
   font-weight: ${(props) => (props.navType === 2 ? "bold" : 400)};
 `;
 export const Container = styled.div<{ treasureList: TreasureProps[] | null }>`
-  margin-top: 30px;
+  margin: 30px 0;
   width: 100%;
   display: flex;
   align-items: center;

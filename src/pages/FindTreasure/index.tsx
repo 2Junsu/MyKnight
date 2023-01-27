@@ -21,6 +21,7 @@ import {
   TextBox,
   Title,
   TreasureListWrap,
+  VerText,
   Wrap,
 } from "./style";
 import { ReactComponent as Logout } from "../../assets/icon/ic-logout.svg";
@@ -194,7 +195,7 @@ const FindTreasure = () => {
   return (
     <Wrap>
       <Header>
-        <Title>보물 찾기</Title>
+        <Title>보물 찾기<VerText>Ver 1.0.1</VerText></Title>
         <button onClick={logout}>
           <Logout />
         </button>
@@ -254,6 +255,10 @@ const FindTreasure = () => {
                 type={d.type}
                 value={d.value}
                 border={setBorder(d.value)}
+                onClick={() => {
+                  if (d.column && d.row)
+                    openModal(d.type, d.value, 5 * (d.column - 1) + d.row - 1);
+                }}
               />
             </SortedItemContainer>
           ))}
