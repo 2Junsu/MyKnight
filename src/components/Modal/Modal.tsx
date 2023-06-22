@@ -1,9 +1,9 @@
-import React from "react";
+import { ReactNode } from "react";
 import ModalComponent from "react-modal";
 ModalComponent.setAppElement("#root");
 
 interface ModalProps {
-  children: React.ReactNode;
+  children: ReactNode;
   width: number;
   isOpen: boolean;
   closeModal: () => void;

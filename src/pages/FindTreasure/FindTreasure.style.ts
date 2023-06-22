@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { TreasureProps } from ".";
 import { color } from "../../style/common/color";
 
 export const Wrap = styled.div`
@@ -24,10 +23,10 @@ export const Header = styled.div`
   }
 `;
 export const Title = styled.h1``;
-export const VerText=styled.span`
-font-size:20px;
-margin-left:8px;
-`
+export const VerText = styled.span`
+  font-size: 20px;
+  margin-left: 8px;
+`;
 export const NavContainer = styled.div`
   margin-top: 20px;
   width: 100%;
@@ -46,53 +45,12 @@ export const NavItem2 = styled(NavItem)`
     ${(props) => (props.navType === 2 ? "black" : "transparent")};
   font-weight: ${(props) => (props.navType === 2 ? "bold" : 400)};
 `;
-export const Container = styled.div<{ treasureList: TreasureProps[] | null }>`
-  margin: 30px 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 export const LoadingWrap = styled.div`
   height: 616px;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
-export const TreasureListWrap = styled.div`
-  width: 90%;
-  display: grid;
-  place-items: center;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
-`;
-export const SortedContainer = styled.div`
-  margin-top: 60px;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-export const PositionText = styled.span`
-  font-size: 18px;
-  font-weight: 600;
-  white-space: nowrap;
-  margin-right: 12px;
-`;
-export const SortedItemContainer = styled.div`
-  margin: 4px 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-`;
-export const NumberContainer = styled.div`
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-`;
-export const NumberTextContainer = styled(SortedItemContainer)``;
-export const NumberText = styled(PositionText)``;
 export const ModalWrap = styled.div`
   display: flex;
   flex-direction: column;

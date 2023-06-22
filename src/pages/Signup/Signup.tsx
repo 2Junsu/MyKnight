@@ -1,5 +1,9 @@
-import React, { useState } from "react";
-import Input from "../../components/common/Input";
+import { useState, FormEvent, ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
+
 import {
   Container,
   InputWrap,
@@ -8,14 +12,11 @@ import {
   PasswordInput,
   PasswordInputWrap,
   Wrap,
-} from "./style";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+} from "./Signup.style";
+import Input from "../../components/common/Input/Input";
 import { auth, db } from "../../firebase-config";
-import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
 import { setCookie } from "../../utils/cookie";
-import { doc, setDoc } from "firebase/firestore";
-import { TreasureProps } from "../FindTreasure";
+import { TreasureProps } from "../FindTreasure/FindTreasure";
 
 interface SignupInfoProps {
   email: string;
@@ -37,11 +38,11 @@ const Signup = () => {
 
   const emailRegExp = (str: string) => {
     let regExp =
-      /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
     return regExp.test(str) ? true : false;
   };
 
-  const signup = async (e: React.FormEvent<HTMLFormElement>) => {
+  const signup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!emailRegExp(email)) {
@@ -72,27 +73,25 @@ const Signup = () => {
         })
       );
 
-      let list = [];
-      for (let i = 0; i < 50; i++) {
-        let column = Math.ceil((i + 1) / 5);
-        let row = (i + 1) % 5;
-        if (row === 0) row = 5;
-        const dummy: TreasureProps = {
+      const newList: TreasureProps[] = Array(50)
+        .fill({
           type: "",
-          value: 9999,
-          column,
-          row,
-        };
-        list.push(dummy);
-      }
+          value: 0,
+        })
+        .map((item, idx) => ({
+          ...item,
+          id: uuidv4(),
+          column: Math.ceil((idx + 1) / 5),
+          row: (idx + 1) % 5 ? (idx + 1) % 5 : 5,
+        }));
 
       const userDB = {
         uid: user.user.uid,
         email: user.user.email,
         nickname,
-        treasureList: list,
+        treasureList: newList,
       };
-      await setDoc(doc(db, "users", nickname), userDB);
+      await setDoc(doc(db, "users", user.user.uid), userDB);
 
       const accessToken = await user.user.getIdToken();
       //   const refreshToken=user.user.refreshToken;
@@ -100,7 +99,7 @@ const Signup = () => {
       alert("새로운 회원이 되신 걸 환영해요!");
       navigate("/treasure");
     } catch (error: any) {
-      console.log(error.code);
+      console.error(error.code);
       switch (error.code) {
         case "auth/email-already-in-use":
           alert("이미 가입된 이메일입니다.");
@@ -114,7 +113,7 @@ const Signup = () => {
     }
   };
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     const changed = {
       ...SignupInfo,
       [e.target.name]: e.target.value,

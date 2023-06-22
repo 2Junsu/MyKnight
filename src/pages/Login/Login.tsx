@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import Input from "../../components/common/Input";
+
 import {
   Container,
   InputWrap,
@@ -11,9 +12,9 @@ import {
   SignupText,
   SignupWrap,
   Wrap,
-} from "./style";
+} from "./Login.style";
+import Input from "../../components/common/Input/Input";
 import { auth } from "../../firebase-config";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { getCookie, setCookie } from "../../utils/cookie";
 
 interface LoginInfoProps {
@@ -34,9 +35,10 @@ const Login = () => {
   useEffect(() => {
     const accessToken = getCookie("accessToken");
     if (accessToken !== undefined) navigate("/treasure");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleInput = (e: FormEvent<HTMLInputElement>) => {
     const changed = {
       ...loginInfo,
       [e.currentTarget.name]: e.currentTarget.value,
@@ -48,7 +50,7 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
 
-  const login = async (e: React.FormEvent<HTMLFormElement>) => {
+  const login = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (email === "") {
@@ -78,7 +80,7 @@ const Login = () => {
       setCookie("accessToken", accessToken);
       navigate("/treasure");
     } catch (error: any) {
-      console.log(error.code);
+      console.error(error.code);
       switch (error.code) {
         case "auth/user-not-found":
           alert("존재하지 않는 계정입니다.");

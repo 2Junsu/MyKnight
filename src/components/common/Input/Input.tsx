@@ -1,16 +1,17 @@
-import React from "react";
-import { _Input } from "./style";
+import { ChangeEvent } from "react";
+
+import { CustomInput } from "./Input.style";
 
 interface InputProps {
   placeholder: string;
   name: string;
   type?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Input = ({ placeholder, name, type = "text", onChange }: InputProps) => {
   return (
-    <_Input
+    <CustomInput
       placeholder={placeholder}
       name={name}
       type={type}
