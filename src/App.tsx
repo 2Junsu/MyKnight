@@ -1,9 +1,8 @@
-import React from "react";
 import { CookiesProvider } from "react-cookie";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import FindTreasure from "./pages/FindTreasure";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import FindTreasure from "./pages/FindTreasure/FindTreasure";
+import Login from "./pages/Login/Login";
+import Signup from "./pages/Signup/Signup";
 import GlobalStyle from "./style/global";
 
 const App = () => {

@@ -1,9 +1,9 @@
-import React from "react";
-import { TreasureProps } from "../../pages/FindTreasure";
-import { Container, Type, Value } from "./style";
+import { Container, Type, Value } from "./TreasureItem.style";
 // 종류, 수치
 
-export interface TreasureItemProps extends TreasureProps {
+export interface TreasureItemProps {
+  type: string;
+  value: number;
   border: string;
   idx?: number;
   onClick?: () => void;

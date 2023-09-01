@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { _Input } from "../../components/common/Input/style";
+import { CustomInput } from "../../components/common/Input/Input.style";
 import { color } from "../../style/common/color";
 
 export const Wrap = styled.div`
@@ -10,7 +10,7 @@ export const Wrap = styled.div`
   align-items: center;
   background-color: white;
 `;
-export const LoginWrap = styled.div`
+export const SignupWrap = styled.div`
   background-color: white;
   width: 90%;
   height: fit-content;
@@ -41,11 +41,11 @@ export const PasswordInputWrap = styled(InputWrap)`
     }
   }
 `;
-export const PasswordInput = styled(_Input)`
+export const PasswordInput = styled(CustomInput)`
   border: none;
   padding: 0;
 `;
-export const LoginButton = styled.button`
+export const SignupButton = styled.button`
   background-color: ${color.blue};
   border-radius: 24px;
   color: white;
@@ -54,20 +54,4 @@ export const LoginButton = styled.button`
   padding: 12px 0;
   width: 100%;
   text-align: center;
-`;
-export const SignupWrap = styled.div`
-  margin-top: 30px;
-  text-align: center;
-  font-size: 16px;
-  font-weight: bold;
-`;
-export const SignupText = styled.span`
-  & > span {
-    color: ${color.blue};
-    white-space: nowrap;
-    margin-left: 12px;
-    &:hover {
-      cursor: pointer;
-    }
-  }
 `;
