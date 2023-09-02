@@ -10,9 +10,13 @@ interface ModalProps {
   className?: ModalComponent.Classes;
 }
 
-const Modal = (props: ModalProps) => {
-  const { children, width, isOpen, closeModal, className } = props;
-
+const Modal = ({
+  children,
+  width,
+  isOpen,
+  closeModal,
+  className,
+}: ModalProps) => {
   return (
     <ModalComponent
       id="modal"
@@ -42,8 +46,7 @@ const Modal = (props: ModalProps) => {
           borderRadius: 12,
           backgroundColor: "white",
         },
-      }}
-    >
+      }}>
       {children}
     </ModalComponent>
   );

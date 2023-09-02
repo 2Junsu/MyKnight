@@ -1,20 +1,14 @@
+import type { TreasureItemType } from "../../types/treasure";
 import { Container, Type, Value } from "./TreasureItem.style";
 // 종류, 수치
 
-export interface TreasureItemProps {
-  type: string;
-  value: number;
-  border: string;
-  idx?: number;
-  onClick?: () => void;
-}
 const TreasureItem = ({
   type,
   value,
   border,
   idx,
   onClick,
-}: TreasureItemProps) => {
+}: TreasureItemType) => {
   return (
     <Container border={border} onClick={onClick}>
       {type === "" ? (
