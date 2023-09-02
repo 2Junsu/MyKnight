@@ -9,7 +9,7 @@ import {
   PositionText,
   SortedContainer,
   SortedItemContainer,
-} from "./TreasureSort.style";
+} from "./TreasureSortTab.style";
 import type { TreasureType, TreasureSortType } from "../../types/treasure";
 
 const TreasureSort = ({ treasureList, openModal }: TreasureSortType) => {

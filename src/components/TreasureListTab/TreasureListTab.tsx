@@ -1,4 +1,4 @@
-import { Container, TreasureListWrap } from "./TreasureList.style";
+import { Container, TreasureListWrap } from "./TreasureListTab.style";
 
 import { getBorderColor } from "../../utils/getBorderColor";
 import TreasureItem from "../TreasureItem/TreasureItem";

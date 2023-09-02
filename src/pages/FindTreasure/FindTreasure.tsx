@@ -22,13 +22,13 @@ import Loading from "../../components/common/Loading.tsx/Loading";
 import Modal from "../../components/Modal/Modal";
 import { auth, db } from "../../firebase-config";
 import { removeCookie } from "../../utils/cookie";
-import TreasureList from "../../components/TreasureList/TreasureList";
+import TreasureList from "../../components/TreasureListTab/TreasureListTab";
 import type { TreasureType } from "../../types/treasure";
 // const TreasureList = lazy(
 //   () => import("../../components/TreasureList/TreasureList")
 // );
 const TreasureSort = lazy(
-  () => import("../../components/TreasureSort/TreasureSort")
+  () => import("../../components/TreasureSortTab/TreasureSortTab")
 );
 
 const FindTreasure = () => {
