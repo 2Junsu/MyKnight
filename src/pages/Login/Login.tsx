@@ -16,15 +16,11 @@ import {
 import Input from "../../components/common/Input/Input";
 import { auth } from "../../firebase-config";
 import { getCookie, setCookie } from "../../utils/cookie";
-
-interface LoginInfoProps {
-  email: string;
-  password: string;
-}
+import type { LoginInfo } from "../../types/auth";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [loginInfo, setLoginInfo] = useState<LoginInfoProps>({
+  const [loginInfo, setLoginInfo] = useState<LoginInfo>({
     email: "",
     password: "",
   });
@@ -125,8 +121,7 @@ const Login = () => {
           <span
             onClick={() => {
               navigate("/signup");
-            }}
-          >
+            }}>
             회원 가입
           </span>
         </SignupText>

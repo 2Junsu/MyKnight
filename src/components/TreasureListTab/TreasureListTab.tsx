@@ -1,14 +1,10 @@
-import { Container, TreasureListWrap } from "./TreasureList.style";
-import { TreasureProps } from "../../pages/FindTreasure/FindTreasure";
+import { Container, TreasureListWrap } from "./TreasureListTab.style";
+
 import { getBorderColor } from "../../utils/getBorderColor";
 import TreasureItem from "../TreasureItem/TreasureItem";
+import type { TreasureSortType } from "../../types/treasure";
 
-interface TreasureSortProps {
-  treasureList: TreasureProps[];
-  openModal: (type: string, value: number, id: number) => void;
-}
-
-const TreasureList = ({ treasureList, openModal }: TreasureSortProps) => {
+const TreasureList = ({ treasureList, openModal }: TreasureSortType) => {
   return (
     <Container>
       <TreasureListWrap>

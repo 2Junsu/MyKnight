@@ -22,29 +22,22 @@ import Loading from "../../components/common/Loading.tsx/Loading";
 import Modal from "../../components/Modal/Modal";
 import { auth, db } from "../../firebase-config";
 import { removeCookie } from "../../utils/cookie";
-import TreasureList from "../../components/TreasureList/TreasureList";
+import TreasureList from "../../components/TreasureListTab/TreasureListTab";
+import type { TreasureType } from "../../types/treasure";
 // const TreasureList = lazy(
 //   () => import("../../components/TreasureList/TreasureList")
 // );
 const TreasureSort = lazy(
-  () => import("../../components/TreasureSort/TreasureSort")
+  () => import("../../components/TreasureSortTab/TreasureSortTab")
 );
-
-export interface TreasureProps {
-  id: number;
-  type: string;
-  value: number;
-  column?: number;
-  row?: number;
-}
 
 const FindTreasure = () => {
   const uid = JSON.parse(localStorage.getItem("userInfo") || "{}").uid;
   const navigate = useNavigate();
-  const [treasureList, setTreasureList] = useState<TreasureProps[]>([]);
+  const [treasureList, setTreasureList] = useState<TreasureType[]>([]);
   const [navType, setNavType] = useState(1);
   const [modalOpened, setModalOpened] = useState(false);
-  const [modalInfo, setModalInfo] = useState<TreasureProps>({
+  const [modalInfo, setModalInfo] = useState<TreasureType>({
     type: "",
     value: 0,
     id: 0,
@@ -62,7 +55,7 @@ const FindTreasure = () => {
   const handleModalInfo = (
     e: ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {
-    const changed: TreasureProps = {
+    const changed: TreasureType = {
       ...modalInfo,
       [e.target.name]: e.target.value,
     };
@@ -82,7 +75,7 @@ const FindTreasure = () => {
     }
 
     if (treasureList !== null) {
-      let list: TreasureProps[] = treasureList.map((treasure) =>
+      let list: TreasureType[] = treasureList.map((treasure) =>
         treasure.id === id ? { ...treasure, type, value } : treasure
       );
       const ref = doc(db, "users", uid);
@@ -146,8 +139,7 @@ const FindTreasure = () => {
             <LoadingWrap>
               <Loading />
             </LoadingWrap>
-          }
-        >
+          }>
           <TreasureSort treasureList={treasureList} openModal={openModal} />
         </Suspense>
       )}
@@ -159,8 +151,7 @@ const FindTreasure = () => {
             <select
               name="type"
               defaultValue={modalInfo.type ? modalInfo.type : "default"}
-              onChange={handleModalInfo}
-            >
+              onChange={handleModalInfo}>
               <option value="default" disabled>
                 선택하세요.
               </option>

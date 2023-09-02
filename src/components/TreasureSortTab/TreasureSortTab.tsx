@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TreasureProps } from "../../pages/FindTreasure/FindTreasure";
+
 import { getBorderColor } from "../../utils/getBorderColor";
 import TreasureItem from "../TreasureItem/TreasureItem";
 import {
@@ -9,15 +9,11 @@ import {
   PositionText,
   SortedContainer,
   SortedItemContainer,
-} from "./TreasureSort.style";
+} from "./TreasureSortTab.style";
+import type { TreasureType, TreasureSortType } from "../../types/treasure";
 
-interface TreasureSortProps {
-  treasureList: TreasureProps[];
-  openModal: (type: string, value: number, id: number) => void;
-}
-
-const TreasureSort = ({ treasureList, openModal }: TreasureSortProps) => {
-  const [sortedList, setSortedList] = useState<TreasureProps[]>([]);
+const TreasureSort = ({ treasureList, openModal }: TreasureSortType) => {
+  const [sortedList, setSortedList] = useState<TreasureType[]>([]);
   const [treasureCnt, setTreasureCnt] = useState({
     final: 0,
     hit: 0,

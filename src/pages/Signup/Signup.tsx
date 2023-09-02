@@ -16,18 +16,13 @@ import {
 import Input from "../../components/common/Input/Input";
 import { auth, db } from "../../firebase-config";
 import { setCookie } from "../../utils/cookie";
-import { TreasureProps } from "../FindTreasure/FindTreasure";
 
-interface SignupInfoProps {
-  email: string;
-  password: string;
-  passwordCheck: string;
-  nickname: string;
-}
+import type { SignupInfo } from "../../types/auth";
+import type { TreasureType } from "../../types/treasure";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [SignupInfo, setSignupInfo] = useState<SignupInfoProps>({
+  const [SignupInfo, setSignupInfo] = useState<SignupInfo>({
     email: "",
     password: "",
     passwordCheck: "",
@@ -73,7 +68,7 @@ const Signup = () => {
         })
       );
 
-      const newList: TreasureProps[] = Array(50)
+      const newList: TreasureType[] = Array(50)
         .fill({
           type: "",
           value: 0,
